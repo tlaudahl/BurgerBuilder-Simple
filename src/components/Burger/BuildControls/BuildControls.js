@@ -13,8 +13,17 @@ const controls = [
 export default function BuildControls(props) {
   return (
     <div className={styles.BuildControls}>
+      <p>
+        Current Price: <strong>{props.totalPrice.toFixed(2)}</strong>
+      </p>
       {controls.map((control) => (
-        <BuildControl key={control.label} label={control.label} />
+        <BuildControl
+          removed={() => props.ingredientRemoved(control.type)}
+          added={() => props.ingredientAdded(control.type)}
+          key={control.label}
+          label={control.label}
+          disabled={props.disabled[control.type]}
+        />
       ))}
     </div>
   );
