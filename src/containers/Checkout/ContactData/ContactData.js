@@ -9,11 +9,67 @@ import styles from './ContactData.module.css'
 
 class ContactData extends Component {
     state = {
-        name: 'Travis',
-        email: 'Travis',
-        address: {
-            street: '',
-            postalCode: '',
+        orderForm: {
+            name: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Your Name',
+                },
+                value: ''
+            },
+            street: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Street',
+                },
+                value: ''
+            },
+            zipCode: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'number',
+                    placeholder: 'Zipcode',
+                },
+                value: ''
+            },
+            city: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'City',
+                },
+                value: ''
+            },
+            state: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'State',
+                },
+                value: ''
+            },
+            email: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'email',
+                    placeholder: 'Email',
+                },
+                value: ''
+            },
+            deliveryMethod: {
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        {value: 'two', displayValue: 'Two Day'},
+                        {value: 'three', displayValue: 'Three Day'},
+                        {value: 'five', displayValue: 'Five Day'},
+                        {value: 'seven', displayValue: 'Seven Day'},
+                    ]
+                },
+                value: ''
+            },
         },
         loading: false
     }
@@ -25,13 +81,6 @@ class ContactData extends Component {
         ingredients: this.props.ingredients,
         price: this.props.price,
         customer: {
-            name: "Travis Laudahl",
-            address: {
-            street: "Test",
-            zipCode: "55379",
-            country: "United States",
-            },
-            email: "email@test.com",
         },
         deliveryMethod: "fastest",
         };
@@ -45,12 +94,19 @@ class ContactData extends Component {
     }
 
     render() {
+        const formElements = [];
+        for(let key in this.state.orderForm) {
+            formElements.push({
+                id: key,
+                config: this.state.orderForm[key]
+            });
+        }
         let form = (
             <form>
-                <Input inputtype='input' type='text' name='name' placeholder='Your Name' />
-                <Input inputtype='input' type='text' name='email' placeholder='Your Email' />
-                <Input inputtype='input' type='text' name='street' placeholder='Street' />
-                <Input inputtype='input' type='text' name='postal' placeholder='Postal Code' />
+                {/* <Input elementType="..." elementConfig="..." value="..." /> */}
+                {formElements.map(ele => (
+                    <Input key={ele.id} elementType={ele.config.elementType} elementConfig={ele.config.elementConfig} value={ele.config.value} />
+                ))}
                 <Button btnType='Success' clicked={this.orderHandler}>ORDER</Button>
             </form>
         );
