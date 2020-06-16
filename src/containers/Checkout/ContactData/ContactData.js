@@ -77,12 +77,14 @@ class ContactData extends Component {
     orderHandler = (e) => {
         e.preventDefault();
         this.setState({ loading: true });
+        const formData = {};
+        for(let formEle in this.state.orderForm) {
+            formData[formEle] = this.state.orderForm[formEle].value;
+        }
         const order = {
         ingredients: this.props.ingredients,
         price: this.props.price,
-        customer: {
-        },
-        deliveryMethod: "fastest",
+        orderData: formData,
         };
         axios
         .post("/orders.json", order)
@@ -91,6 +93,18 @@ class ContactData extends Component {
             this.props.history.push('/');
         })
         .catch((err) => this.setState({ loading: false}));
+    }
+
+    inputChangedHandler = (e, inputIdentifier) => {
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        };
+        const updatedFormElement = { 
+            ...updatedOrderForm[inputIdentifier]
+        };
+        updatedFormElement.value = e.target.value;
+        updatedOrderForm[inputIdentifier] = updatedFormElement;
+        this.setState({orderForm: updatedOrderForm});
     }
 
     render() {
@@ -102,19 +116,19 @@ class ContactData extends Component {
             });
         }
         let form = (
-            <form>
+            <form onSubmit={this.orderHandler}>
                 {/* <Input elementType="..." elementConfig="..." value="..." /> */}
                 {formElements.map(ele => (
-                    <Input key={ele.id} elementType={ele.config.elementType} elementConfig={ele.config.elementConfig} value={ele.config.value} />
+                    <Input changed={(e) => this.inputChangedHandler(e, ele.id)} key={ele.id} elementType={ele.config.elementType} elementConfig={ele.config.elementConfig} value={ele.config.value} />
                 ))}
-                <Button btnType='Success' clicked={this.orderHandler}>ORDER</Button>
+                <Button btnType='Success'>ORDER</Button>
             </form>
         );
         if(this.state.loading) {
             form = <Spinner />
         }
         return (
-            <div class={styles.ContactData}>
+            <div className={styles.ContactData}>
                 <h4>Enter Your Contact Data</h4>
                 {form}
             </div>
